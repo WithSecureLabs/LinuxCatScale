@@ -24,8 +24,8 @@ The most important fields to change would be the volumes under the logstash sect
 logstash:
     image: docker.elastic.co/logstash/logstash:7.1.1
     volumes:
-      - /home/Forensicator/cases/linux-hunt/linux-collection-script-sans/Docker/config/pipeline/:/usr/share/logstash/pipeline/
-      - /home/Forensicator/cases/linux-hunt/linux-collection-script-sans/extracted/:/logs/
+      - /home/Forensicator/cases/LinuxCatScale/Docker/config/pipeline/:/usr/share/logstash/pipeline/
+      - /home/Forensicator/cases/LinuxCatScale/extracted/:/logs/
     networks:
       - elktest
     links:
