@@ -1,0 +1,3 @@
+SYSTEMD_LOGIND_NEW New session %{INT:systemd_login_sessionid} of user %{USER:systemd_login_user}\.
+SYSTEMD_LOGIND_REMOVED Removed session %{INT:systemd_login_sessionid}\.
+SYSTEMD_LOGIND %{SYSTEMD_LOGIND_NEW}|%{SYSTEMD_LOGIND_REMOVED}

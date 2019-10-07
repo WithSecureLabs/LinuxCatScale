@@ -1,0 +1,437 @@
+[
+  {
+    "_id": "Web:-2xx-Responses",
+    "_type": "search",
+    "_source": {
+      "title": "Web: 2xx Responses",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "vhost",
+        "request",
+        "response",
+        "referrer",
+        "agent",
+        "clientip",
+        "geoip.continent_code",
+        "geoip.country_name",
+        "bytes"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-apache-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"response:[200 TO 299]\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Mail:-Outgoing-SMTP-Delivery",
+    "_type": "search",
+    "_source": {
+      "title": "Mail: Outgoing SMTP Delivery",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "postfix_queueid",
+        "postfix_to",
+        "postfix_relay_hostname",
+        "postfix_relay_ip",
+        "postfix_delay_before_qmgr",
+        "postfix_delay_in_qmgr",
+        "postfix_delay_conn_setup",
+        "postfix_delay_transmission",
+        "postfix_delay",
+        "postfix_status",
+        "postfix_dsn"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:\\\"postfix/smtp\\\"\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Mail:-Delivered-Incoming",
+    "_type": "search",
+    "_source": {
+      "title": "Mail: Delivered Incoming",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "postfix_to",
+        "postfix_queueid",
+        "postfix_delay",
+        "postfix_delay_conn_setup",
+        "postfix_delay_in_qmgr",
+        "postfix_delay_before_qmgr",
+        "postfix_delay_transmission",
+        "postfix_dsn"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"query\":{\"query_string\":{\"query\":\"program:\\\"postfix/pipe\\\" AND postfix_status:sent AND postfix_relay_service:dovecot\",\"analyze_wildcard\":true}},\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  },
+  {
+    "_id": "Mail:-Greylisting",
+    "_type": "search",
+    "_source": {
+      "title": "Mail: Greylisting",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "postgrey_action",
+        "postgrey_reason",
+        "postgrey_delay",
+        "postgrey_client_name",
+        "postgrey_client_ip",
+        "postgrey_from",
+        "postgrey_to"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:postgrey -tags:_grok_postgrey_nomatch\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "spamd:-Analysis-Results",
+    "_type": "search",
+    "_source": {
+      "title": "spamd: Analysis Results",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "sender",
+        "filter_rules"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:spamd AND tags:_grok_spamd_scaninfo_success\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Auth:-PAM-Events",
+    "_type": "search",
+    "_source": {
+      "title": "Auth: PAM Events",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "message",
+        "program",
+        "pam_logname",
+        "pam_module",
+        "pam_module_interface",
+        "pam_rhost",
+        "pam_ruser",
+        "pam_tty",
+        "pam_user"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-auth-*\",\"filter\":[{\"meta\":{\"negate\":true,\"index\":\"logstash-auth-*\",\"key\":\"program\",\"value\":\"sshd\",\"disabled\":false,\"alias\":null},\"query\":{\"match\":{\"program\":{\"query\":\"sshd\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"program\",\"value\":\"CRON\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"program\":{\"query\":\"CRON\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"program\",\"value\":\"su\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"program\":{\"query\":\"su\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"program\",\"value\":\"sudo\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"program\":{\"query\":\"sudo\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"program\",\"value\":\"systemd\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"program\":{\"query\":\"systemd\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"tags:_grok_pam_success\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "SSH-Auth:-Successful",
+    "_type": "search",
+    "_source": {
+      "title": "SSH Auth: Successful",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "ssh_protocol",
+        "ssh_client_ip",
+        "ssh_authmethod",
+        "ssh_user",
+        "ssh_pubkey_type",
+        "ssh_pubkey_fingerprint",
+        "geoip.continent_code",
+        "geoip.country_name",
+        "geoip.region_name",
+        "geoip.city_name"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-auth-*\",\"query\":{\"query_string\":{\"query\":\"program:sshd AND ssh_authresult:success\",\"analyze_wildcard\":true}},\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  },
+  {
+    "_id": "Mail:-SMTP-Authentications",
+    "_type": "search",
+    "_source": {
+      "title": "Mail: SMTP Authentications",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "postfix_client_ip",
+        "postfix_sasl_method",
+        "postfix_sasl_username",
+        "geoip.continent_code",
+        "geoip.country_name",
+        "geoip.region_name",
+        "geoip.city_name"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:\\\"postfix/smtpd\\\" AND _exists_:postfix_sasl_username\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "SSH-Auth:-Failed",
+    "_type": "search",
+    "_source": {
+      "title": "SSH Auth: Failed",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "ssh_protocol",
+        "ssh_client_ip",
+        "ssh_user",
+        "ssh_failreason",
+        "ssh_authmethod",
+        "geoip.continent_code",
+        "geoip.country_name",
+        "geoip.region_name",
+        "geoip.city_name"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-auth-*\",\"query\":{\"query_string\":{\"query\":\"program:sshd AND ssh_authresult:fail\",\"analyze_wildcard\":true}},\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  },
+  {
+    "_id": "sudo:-Authentication-Failures",
+    "_type": "search",
+    "_source": {
+      "title": "sudo: Authentication Failures",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "message",
+        "pam_logname",
+        "pam_module",
+        "pam_module_interface",
+        "pam_rhost",
+        "pam_ruser",
+        "pam_tty",
+        "pam_user"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-auth-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:sudo AND \\\"authentication failure\\\"\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "sudo:-Successful",
+    "_type": "search",
+    "_source": {
+      "title": "sudo: Successful",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "sudo_user",
+        "sudo_targetuser",
+        "sudo_tty",
+        "sudo_pwd",
+        "sudo_command"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-auth-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:sudo AND tags:_grok_sudo_success\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Auth:-su",
+    "_type": "search",
+    "_source": {
+      "title": "Auth: su",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "su_user",
+        "su_targetuser",
+        "su_tty"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-auth-*\",\"filter\":[{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"tags\",\"value\":\"_grok_su_success\",\"disabled\":false,\"alias\":null},\"query\":{\"match\":{\"tags\":{\"query\":\"_grok_su_success\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":true,\"index\":\"logstash-auth-*\",\"key\":\"su_targetuser\",\"value\":\"root\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"su_targetuser\":{\"query\":\"root\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":true,\"index\":\"logstash-auth-*\",\"key\":\"su_user\",\"value\":\"root\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"su_user\":{\"query\":\"root\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:su\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Auth:-Account-Management-Activity",
+    "_type": "search",
+    "_source": {
+      "title": "Auth: Account Management Activity",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "message"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-auth-*\",\"query\":{\"query_string\":{\"query\":\"tags:(_grok_new_account_success _grok_usermod_success _grok_userdel_success _grok_groupdel_success)\",\"analyze_wildcard\":true}},\"filter\":[{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"account_action\",\"value\":\"create\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"account_action\":{\"query\":\"create\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"account_action\",\"value\":\"add\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"account_action\":{\"query\":\"add\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"account_action\",\"value\":\"change\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"account_action\":{\"query\":\"change\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-auth-*\",\"key\":\"account_action\",\"value\":\"delete\",\"disabled\":true,\"alias\":null},\"query\":{\"match\":{\"account_action\":{\"query\":\"delete\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  },
+  {
+    "_id": "Mail:-Dovecot-Authentications",
+    "_type": "search",
+    "_source": {
+      "title": "Mail: Dovecot Authentications",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "dovecot_user",
+        "dovecot_auth_method",
+        "dovecot_client_ip",
+        "dovecot_login_data",
+        "dovecot_session",
+        "dovecot_login_result"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"program:dovecot AND _exists_:dovecot_login_result\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Mail:-Dovecot-LDA-Delivery",
+    "_type": "search",
+    "_source": {
+      "title": "Mail: Dovecot LDA Delivery",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "message",
+        "dovecot_user",
+        "dovecot_action",
+        "dovecot_method",
+        "dovecot_msgid"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"query\":{\"query_string\":{\"query\":\"program:dovecot AND lda\",\"analyze_wildcard\":true}},\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647}}"
+      }
+    }
+  },
+  {
+    "_id": "Mail:-Rejected-Incoming",
+    "_type": "search",
+    "_source": {
+      "title": "Mail: Rejected Incoming",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "postfix_from",
+        "postfix_to",
+        "postfix_status_code",
+        "postfix_status_code_enhanced",
+        "postfix_status_message",
+        "postfix_client_hostname",
+        "postfix_client_ip",
+        "message"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-mail-*\",\"filter\":[{\"meta\":{\"negate\":false,\"index\":\"logstash-mail-*\",\"key\":\"postfix_status_message\",\"value\":\"Recipient address rejected: Access denied\",\"disabled\":true,\"alias\":\"Rejected Recipient\"},\"query\":{\"match\":{\"postfix_status_message\":{\"query\":\"Recipient address rejected: Access denied\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-mail-*\",\"key\":\"postfix_status_message\",\"value\":\"Relay access denied\",\"disabled\":true,\"alias\":\"Relaying Denied\"},\"query\":{\"match\":{\"postfix_status_message\":{\"query\":\"Relay access denied\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-mail-*\",\"key\":\"postfix_status_message\",\"value\":\"Greylisted\",\"disabled\":true,\"alias\":\"Greylisted\"},\"query\":{\"match\":{\"postfix_status_message\":{\"query\":\"Greylisted\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}},{\"meta\":{\"negate\":false,\"index\":\"logstash-mail-*\",\"key\":\"postfix_pipe_response\",\"value\":\"delivered via dovecot service\",\"disabled\":true,\"alias\":\"Delivered\"},\"query\":{\"match\":{\"postfix_pipe_response\":{\"query\":\"delivered via dovecot service\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"(program:\\\"postfix/smtpd\\\" AND postfix_action:reject) OR (program:\\\"postfix/pipe\\\" AND postfix_status:sent)\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  },
+  {
+    "_id": "Web:-5xx-Responses",
+    "_type": "search",
+    "_source": {
+      "title": "Web: 5xx Responses",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "clientip",
+        "vhost",
+        "request",
+        "response"
+      ],
+      "sort": [
+        "@timestamp",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"logstash-apache-*\",\"filter\":[],\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"require_field_match\":false,\"fragment_size\":2147483647},\"query\":{\"query_string\":{\"query\":\"response:[500 TO 599]\",\"analyze_wildcard\":true}}}"
+      }
+    }
+  }
+]

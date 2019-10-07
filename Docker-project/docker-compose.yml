@@ -1,0 +1,44 @@
+version: '3'
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.3.0
+    ports:
+      - "8090:5601"
+    links:
+      - elasticsearch
+    networks:
+      - elktest
+    restart: always
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.3.0
+    ports:
+      - "9200"
+      - "9300"
+    networks:
+      - elktest
+    environment:
+      - ES_JAVA_OPTS= -Xms1g -Xmx1g # 1G min/1G max
+      - discovery.type=single-node
+    restart: always
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash-oss:7.3.0
+    volumes:
+      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
+      - ../extracted/:/logs/
+    networks:
+      - elktest
+    links:
+      - elasticsearch
+    restart: always
+    depends_on:
+      - elasticsearch
+ 
+networks:
+  elktest:
+
+
+

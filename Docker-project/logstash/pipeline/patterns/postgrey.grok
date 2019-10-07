@@ -1,0 +1,1 @@
+POSTGREY ^action=%{DATA:postgrey_action}, reason=%{DATA:postgrey_reason}(, delay=%{INT:postgrey_delay})?, client_name=%{DATA:postgrey_client_name}, client_address=%{DATA:postgrey_client_ip}, sender=%{DATA:postgrey_from}, recipient=%{DATA:postgrey_to}$

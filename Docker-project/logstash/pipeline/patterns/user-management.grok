@@ -1,0 +1,15 @@
+USERMOD_CHANGE (?<account_action>change) user '%{USER:account_name}' %{WORD:account_attribute}( from '%{DATA:account_from}' to '%{DATA:account_to}')?
+USERMOD_GROUP_MEMBERSHIP (?<account_action>add|delete) '%{USER:account_name}' (?:to|from) %{DATA:account_grouptype} '%{DATA:account_groupname}'
+USERMOD %{USERMOD_CHANGE}|%{USERMOD_GROUP_MEMBERSHIP}
+
+NEW_ACCOUNT new %{DATA:account_type}:\s+%{GREEDYDATA:account_kvdata}
+ACCOUNT_ADD %{NEW_ACCOUNT}|%{USERMOD_GROUP_MEMBERSHIP}
+
+USERDEL_USER (?<account_action>delete) user '%{USER:account_name}'
+USERDEL_GROUP (?<account_action>remove)d %{DATA:account_grouptype} '%{DATA:account_groupname}' owned by '%{DATA:account_groupowner}'
+USERDEL_GROUP_DELUSER (?<account_action>delete) '%{USER:account_name}' from %{DATA:account_grouptype} '%{DATA:account_groupname}'
+USERDEL %{USERDEL_USER}|%{USERDEL_GROUP}|%{USERDEL_GROUP_DELUSER}
+
+GROUPDEL %{DATA:account_type} '%{USER:account_name}' removed( from %{GREEDYDATA:account_repository})?
+
+# TODO: groupmod, chage, chfn

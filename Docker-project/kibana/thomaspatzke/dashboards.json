@@ -1,0 +1,98 @@
+[
+  {
+    "_id": "Authentication",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Authentication",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"SSH-Auth:-Successful-Users\",\"panelIndex\":1,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":4,\"columns\":[\"ssh_protocol\",\"ssh_client_ip\",\"ssh_authmethod\",\"ssh_user\",\"ssh_pubkey_type\",\"ssh_pubkey_fingerprint\",\"geoip.continent_code\",\"geoip.country_name\",\"geoip.region_name\",\"geoip.city_name\"],\"id\":\"SSH-Auth:-Successful\",\"panelIndex\":3,\"row\":1,\"size_x\":9,\"size_y\":5,\"sort\":[\"@timestamp\",\"desc\"],\"type\":\"search\"},{\"id\":\"Auth:-PAM\",\"type\":\"visualization\",\"panelIndex\":4,\"size_x\":3,\"size_y\":5,\"col\":1,\"row\":6},{\"id\":\"su:-Users\",\"type\":\"visualization\",\"panelIndex\":5,\"size_x\":2,\"size_y\":5,\"col\":6,\"row\":6},{\"id\":\"sudo:-Authentication-Failures\",\"type\":\"visualization\",\"panelIndex\":6,\"size_x\":1,\"size_y\":2,\"col\":4,\"row\":11},{\"id\":\"sudo:-Users\",\"type\":\"visualization\",\"panelIndex\":7,\"size_x\":2,\"size_y\":5,\"col\":4,\"row\":6},{\"id\":\"sudo:-Successful\",\"type\":\"search\",\"panelIndex\":8,\"size_x\":5,\"size_y\":5,\"col\":8,\"row\":6,\"columns\":[\"sudo_user\",\"sudo_targetuser\",\"sudo_tty\",\"sudo_pwd\",\"sudo_command\"],\"sort\":[\"@timestamp\",\"desc\"]},{\"id\":\"sudo:-Authentication-Failures\",\"type\":\"search\",\"panelIndex\":9,\"size_x\":7,\"size_y\":6,\"col\":5,\"row\":11,\"columns\":[\"message\",\"pam_logname\",\"pam_module\",\"pam_module_interface\",\"pam_rhost\",\"pam_ruser\",\"pam_tty\",\"pam_user\"],\"sort\":[\"@timestamp\",\"desc\"]}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-4\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-5\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-7\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "version": 1,
+      "timeRestore": true,
+      "timeTo": "now",
+      "timeFrom": "now-7d",
+      "refreshInterval": {
+        "display": "Off",
+        "pause": false,
+        "value": 0
+      },
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "Mail",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Mail",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"Mail:-SMTP-Rejection\",\"panelIndex\":3,\"row\":1,\"size_x\":6,\"size_y\":6,\"type\":\"visualization\"},{\"col\":7,\"id\":\"Mail:-Greylisting\",\"panelIndex\":2,\"row\":1,\"size_x\":6,\"size_y\":6,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Top-Spam-SpamAssassin-Filter-Rules\",\"panelIndex\":5,\"row\":7,\"size_x\":6,\"size_y\":4,\"type\":\"visualization\"},{\"col\":7,\"id\":\"Mail:-Dovecot-LDA-Delivery-Ham-slash-Spam-Ratio\",\"panelIndex\":1,\"row\":7,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Mail:-Outgoing-Mail-Delivery\",\"panelIndex\":4,\"row\":11,\"size_x\":6,\"size_y\":3,\"type\":\"visualization\"}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{}",
+      "version": 1,
+      "timeRestore": true,
+      "timeTo": "now",
+      "timeFrom": "now-30d/d",
+      "refreshInterval": {
+        "display": "Off",
+        "pause": false,
+        "value": 0
+      },
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "Web",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Web",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"Web:-Access-by-Domain\",\"panelIndex\":1,\"row\":1,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"Web:-IPs-by-Day\",\"panelIndex\":7,\"row\":1,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Web:-Response-Codes\",\"panelIndex\":3,\"row\":6,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":4,\"columns\":[\"clientip\",\"vhost\",\"request\",\"response\"],\"id\":\"Web:-5xx-Responses\",\"panelIndex\":6,\"row\":6,\"size_x\":5,\"size_y\":5,\"sort\":[\"@timestamp\",\"desc\"],\"type\":\"search\"},{\"col\":1,\"id\":\"Web:-Most-Popular-Resources\",\"panelIndex\":4,\"row\":11,\"size_x\":4,\"size_y\":6,\"type\":\"visualization\"},{\"col\":5,\"id\":\"Web:-Most-Requests-for-Nonexisting-Resources\",\"panelIndex\":5,\"row\":11,\"size_x\":4,\"size_y\":6,\"type\":\"visualization\"},{\"id\":\"Web:-Visitor-Map\",\"type\":\"visualization\",\"panelIndex\":8,\"size_x\":4,\"size_y\":6,\"col\":9,\"row\":6},{\"id\":\"Web:-Visitor-Countries\",\"type\":\"visualization\",\"panelIndex\":9,\"size_x\":4,\"size_y\":4,\"col\":9,\"row\":12},{\"id\":\"Web:-User-Agents\",\"type\":\"visualization\",\"panelIndex\":10,\"size_x\":4,\"size_y\":4,\"col\":9,\"row\":16}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-4\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-5\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-8\":{\"mapCenter\":[0,0],\"mapZoom\":1}}",
+      "version": 1,
+      "timeRestore": true,
+      "timeTo": "now",
+      "timeFrom": "now-30d/d",
+      "refreshInterval": {
+        "display": "Off",
+        "pause": false,
+        "value": 0
+      },
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "Failed-SSH-Authentication",
+    "_type": "dashboard",
+    "_source": {
+      "title": "Failed SSH Authentication",
+      "hits": 0,
+      "description": "",
+      "panelsJSON": "[{\"col\":1,\"id\":\"Auth:-Failed-Usernames\",\"panelIndex\":1,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"col\":1,\"id\":\"SSH-Auth:-Failed-Logins-per-Day\",\"panelIndex\":3,\"row\":6,\"size_x\":12,\"size_y\":5,\"type\":\"visualization\"},{\"col\":1,\"id\":\"SSH-Auth:-Failed-Login-Map\",\"panelIndex\":2,\"row\":11,\"size_x\":12,\"size_y\":9,\"type\":\"visualization\"},{\"col\":11,\"id\":\"SSH-Auth:-Cyber-nonsense-Attribution-Count\",\"panelIndex\":4,\"row\":1,\"size_x\":2,\"size_y\":5,\"type\":\"visualization\"},{\"col\":4,\"id\":\"4dd3de30-ed86-11e6-860e-05bd6b5fb7ff\",\"panelIndex\":5,\"row\":1,\"size_x\":3,\"size_y\":5,\"type\":\"visualization\"},{\"size_x\":4,\"size_y\":5,\"panelIndex\":6,\"type\":\"visualization\",\"id\":\"9bd13ff0-2158-11e7-8902-ade9e28d9634\",\"col\":7,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":false}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-2\":{\"mapCenter\":[28.92163128242129,-46.845703125],\"mapZoom\":3},\"P-6\":{\"vis\":{\"defaultColors\":{\"0 - 50\":\"rgb(255,255,204)\",\"50 - 100\":\"rgb(255,241,170)\",\"100 - 200\":\"rgb(254,225,135)\",\"200 - 400\":\"rgb(254,201,101)\",\"400 - 800\":\"rgb(254,171,73)\",\"800 - 1600\":\"rgb(253,141,60)\",\"1600 - 3200\":\"rgb(252,91,46)\",\"3200 - 6400\":\"rgb(237,47,34)\",\"6400 - 999999999\":\"rgb(212,16,32)\"}}},\"P-4\":{\"vis\":{\"legendOpen\":false}}}",
+      "version": 1,
+      "timeRestore": true,
+      "timeTo": "now",
+      "timeFrom": "now-30d",
+      "refreshInterval": {
+        "display": "Off",
+        "pause": false,
+        "value": 0
+      },
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+      }
+    }
+  }
+]

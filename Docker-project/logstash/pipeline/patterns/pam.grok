@@ -1,0 +1,7 @@
+PAM_MODULE_NAME pam_\w+
+PAM_MESSAGE_AUTHFAIL authentication failure;\s*%{GREEDYDATA:pam_kvdata}
+PAM_MESSAGE_SESSOPEN session opened for user %{USER:pam_user} by %{DATA:pam_openedby}\(%{GREEDYDATA:pam_kvdata}\)
+PAM_MESSAGE_SESSCLOSED session closed for user %{USER:pam_user}
+PAM_MESSAGE_GENERIC %{GREEDYDATA}
+PAM_MESSAGE %{PAM_MESSAGE_AUTHFAIL}|%{PAM_MESSAGE_SESSOPEN}|%{PAM_MESSAGE_SESSCLOSED}|%{PAM_MESSAGE_GENERIC}
+PAM %{PAM_MODULE_NAME:pam_module}\(%{DATA:pam_service}:%{WORD:pam_module_interface}\): %{PAM_MESSAGE:pam_message}

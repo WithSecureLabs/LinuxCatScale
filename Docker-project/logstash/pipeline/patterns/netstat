@@ -1,0 +1,5 @@
+MAIN (?<transport_protocol>%{TRANSPROT})\s+(?<recv_q>%{BASE10NUM})\s+(?<send_q>%{BASE10NUM})\s+(?<local_address>%{IP}):(?<local_port>%{PORT})\s+(?<remote_address>%{IP}):(?<remote_port>%{PORT})\s+(?<state>%{STATE}?)\s+(?<timer>%{TSTATE})\s+(?<timer_stats>\(%{BASE10NUM}/%{BASE10NUM}/%{BASE10NUM}\))
+STATE (?:LISTEN|ESTABLISHED|TIME_WAIT|CLOSE_WAIT|%{BASE10NUM})
+TRANSPROT (?:tcp(?:6?)|udp(?:6?)|raw(?:6?))
+TSTATE (?:on|off|timewait|keepalive)
+PORT (?:%{POSINT}|\*)

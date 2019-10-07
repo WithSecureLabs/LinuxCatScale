@@ -1,0 +1,2 @@
+SUDO \s*%{USERNAME:sudo_user}\s*:\s*TTY=%{DATA:sudo_tty}\s*;\s*PWD=%{DATA:sudo_pwd}\s*;\s*USER=%{DATA:sudo_targetuser}\s*;\s*COMMAND=%{GREEDYDATA:sudo_command}
+SU \+\s+%{DATA:su_tty}\s+%{USER:su_user}:%{USER:su_targetuser}
