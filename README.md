@@ -35,7 +35,7 @@ logstash:
       - elasticsearch
 ```
 
-This effectively takes whatever is in `/home/Forensicator/cases/linux-CatScale/Docker/config/pipeline/` and makes it available in the docker container at `/usr/share/logstash/pipeline/`
+This effectively takes whatever is in `/home/Forensicator/cases/linuxCatScale/Docker/config/pipeline/` and makes it available in the docker container at `/usr/share/logstash/pipeline/`
 
 This project has predefined grok filters to ingest data into elastic, feel free to modify them as you need. 
 
