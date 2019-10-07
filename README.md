@@ -20,8 +20,7 @@ The stack is configured to collect data from the Docker-Project/extracted direct
 Navigate to the Docker/config folder and open "docker-compose.yml" in your favourite text editor. 
 The most important fields to change would be the volumes under the logstash section. This essentially maps drives on your analysis machine to the various docker containers. An example configuration is as follows:
 
-`
-logstash:
+`logstash:
     image: docker.elastic.co/logstash/logstash:7.1.1
     volumes:
       - /home/Forensicator/cases/linux-hunt/linux-collection-script-sans/Docker/config/pipeline/:/usr/share/logstash/pipeline/
@@ -32,8 +31,7 @@ logstash:
       - elasticsearch
     restart: always
     depends_on:
-      - elasticsearch
-`
+      - elasticsearch`
 
 This effectively takes whatever is in `/home/Forensicator/cases/linux-CatScale/Docker/config/pipeline/` and makes it available in the docker container at `/usr/share/logstash/pipeline/`
 
