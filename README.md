@@ -33,10 +33,6 @@ user@analysishost:<dir>$ sudo ./Extract-Cat-Scale.sh
 
 This project has predefined grok filters to ingest data into elastic, feel free to modify them as you need. 
 
-The indexes are split into snap-\* indicating a snapshot of data taken at the time of running the script and varlog-\* which indicates data came from a log source
-
-To view the newly imported data: click on the management/gear icon -> Index Patterns and select the index you would like to import. These have been exported and can be found under the kibana folder. Click on management/gear icon, Saved Objects, import and select "CatScale-index-patterns.ndjson" from the kibana folder. Initial searches, visualisations and dashboards can also be imported from this folder.
-
 
 ## What does it collect?
 
