@@ -31,27 +31,6 @@ user@analysishost:<dir>$ sudo ./Extract-Cat-Scale.sh
 
 ### Parsing
 
-The stack is configured to collect data from the Linux-CatScale/extracted directory, if you would like to change this to another location
-Navigate to the Docker/config folder and open "docker-compose.yml" in your favourite text editor. 
-The most important fields to change would be the volumes under the logstash section. This essentially maps drives on your analysis machine to the various docker containers. An example configuration is as follows:
-
-```
-logstash:
-    image: docker.elastic.co/logstash/logstash:7.1.1
-    volumes:
-      - /home/Forensicator/cases/Linux-Catscale/Docker/config/pipeline/:/usr/share/logstash/pipeline/
-      - /home/Forensicator/cases/Linux-CatScale/extracted/:/logs/
-    networks:
-      - elktest
-    links:
-      - elasticsearch
-    restart: always
-    depends_on:
-      - elasticsearch
-```
-
-This effectively takes whatever is in `/home/Forensicator/cases/Linux-CatScale/Docker/config/pipeline/` and makes it available in the docker container at `/usr/share/logstash/pipeline/`
-
 This project has predefined grok filters to ingest data into elastic, feel free to modify them as you need. 
 
 The indexes are split into snap-\* indicating a snapshot of data taken at the time of running the script and varlog-\* which indicates data came from a log source
