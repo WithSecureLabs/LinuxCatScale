@@ -1,4 +1,0 @@
-MAIN from=\"(?<auth_ip>((%{IPV4})(,)?)+)\" (?<sec_type>([\w-])+) (?<auth_key>([A-Za-z0-9+/])+(={0,2})) (?<identifier>%{IDENTIFIER})
-GAP (\s+)
-IDENTIFIER ([^\s]+)
-

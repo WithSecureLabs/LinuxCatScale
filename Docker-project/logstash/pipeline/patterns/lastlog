@@ -1,6 +1,0 @@
-MAIN (%{LINUXUSER})%{GAP}(%{NOTLOGGED}|%{LOGGEDIN})
-LOGGEDIN (?<port>([^\s]+))%{GAP}(?<from_ip>%{IP})%{GAP}(?<latest>%{LOGDATE})
-NOTLOGGED (?<latest>\*\*Never\slogged\sin\*\*)
-LOGDATE (%{DAY}%{GAP}%{MONTH}%{GAP}%{MONTHDAY}%{GAP}%{TIME}%{GAP}%{ISO8601_TIME$
-LINUXUSER (?<username>[a-z_][a-z0-9_-]*)
-GAP (\s+)

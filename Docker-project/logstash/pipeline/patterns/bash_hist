@@ -1,2 +1,0 @@
-MAIN #(?<epoch>%{BASE10NUM})\n(?<command>%{GREEDYDATA})
-
