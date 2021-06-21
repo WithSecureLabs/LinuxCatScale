@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# F-Secure InfoSecurity - Cat-Scale Linux Collection Script
+# F-Secure Consulting - Cat-Scale Linux Collection Script
 # Author: Mehmet Mert Surmeli
 # Contributers: John Rogers, Joani Green
 # Version: 1.0
 # Release Date: 2020-07-21
-#
+# 
 # This script is maintained by FSecure Consulting. Please send any enquiries to incident-response@f-secure.com
 #
 # Instructions:
