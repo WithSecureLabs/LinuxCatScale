@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# F-Secure Consulting - Cat-Scale Linux Collection Script
+# F-Secure InfoSecurity - Cat-Scale Linux Collection Script
 # Author: Mehmet Mert Surmeli
 # Contributers: John Rogers, Joani Green
 # Version: 1.0
@@ -17,7 +17,7 @@
 #  - Collects system information and configuration
 #  - Enumerates and collects persistence data (programs that run either routinely or when the system starts)
 #  - Collects log data from /var/log (contains security and application logs)
-#  - Creates and records MD5 cryptographic hashes of binary files
+#  - Creates and records SHA1 cryptographic hashes of binary files
 # The script does this by executing local binaries on your system. It does not install or drop any binaries on your system or change configurations. 
 # This script may alter forensic artefacts, it is not recommended where evidence preservation is important.
 #
@@ -156,14 +156,12 @@ get_procinfo_GNU(){ #Production
 		ps -e > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processes-e.txt
 	fi
 	
-	echo "      Getting the hash of ps command..."
-	md5sum $(which ps)> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-md5-ps.txt  
 
 	echo "      Getting the proc/*/status..."
 	find /proc -maxdepth 2 -wholename '/proc/[0-9]*/status' | xargs cat  >> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-details.txt
 
 	echo "      Getting the process hashes..."
-	find -L /proc/[0-9]*/exe -print0 | xargs -0 md5sum 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processhashes.txt	
+	find -L /proc/[0-9]*/exe -print0 | xargs -0 sha1sum 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processhashes.txt	
 	
 	echo "      Getting the process symbolic links..."
 	find /proc/[0-9]*/exe -print0 | xargs -0 ls -lh 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-exe-links.txt	
@@ -190,11 +188,8 @@ get_procinfo_Solaris(){ #Production
 		ps -e > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processes-e.txt
 	fi
 	
-	echo "      Getting the hash of ps command..."
-	md5sum $(which ps)> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-md5-ps.txt  
-	
 	echo "      Getting the process hashes..."
-	find /proc/[0-9]*/object -name a.out | xargs md5sum 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processhashes.txt
+	find /proc/[0-9]*/object -name a.out | xargs sha1sum 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processhashes.txt
 	
 	echo "      Getting the process cmdline..."
 	find /proc/[0-9]*/cmdline | xargs head 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-cmdline.txt
@@ -215,21 +210,17 @@ get_netinfo_GNU(){ #Production
 	echo "      Collecting Active Network Connections..."
 	if ss -anepo &>/dev/null; then
 		ss -anepo > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-ss-anepo.txt
-		echo "      Getting the hash of ss command..."
-		md5sum $(which ss)> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-md5-ss.txt  
+
 	elif netstat -pvWanoee &>/dev/null; then
 		netstat -pvWanoee > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-netstat-pvWanoee.txt
-		echo "      Getting the hash of netstat command..."
-		md5sum $(which netstat)> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-md5-netstat.txt  
+
 	elif netstat -pvTanoee &>/dev/null; then
 		netstat -pvTanoee > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-netstat-pvTanoee.txt
-		echo "      Getting the hash of netstat command..."
-		md5sum $(which netstat)> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-md5-netstat.txt  
+
 	else
 		netstat -antup > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-netstat-antup.txt
 		netstat -an > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-netstat-an.txt
-		echo "      Getting the hash of netstat command..."
-		md5sum $(which netstat)> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-md5-netstat.txt  
+
 	fi
 	
 	#Get ip and interface config
@@ -282,11 +273,6 @@ get_netinfo_Solaris(){ #Production
 	#Get routing table
 	echo "      Collecting Routing Table..."
 	netstat -rn > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-routetable.txt
-
-	if which netstat &>/dev/null; then 
-		echo "      Getting the hash of netstat command..."
-		md5sum $(which netstat)> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-md5-netstat.txt  
-	fi
 	
 	#Get SeLinux Verbose information
 	if sestatus &>/dev/null; then
@@ -490,21 +476,13 @@ get_cron_Solaris(){ #Production
 
 
 
-#
-# Hash of all executable files under $PATH variable
-#
-get_binhash(){ #Production
-	
-	echo $PATH | tr ':' '\n' | xargs -I {} find {} -xdev \( -type l -o -type f \) 2>/dev/null -print0 | xargs -0 md5sum 2>/dev/null > $OUTPUT/FSecure_out/Misc/$OUTFILE-binhashes.txt
-
-}
 
 #
 # Find all files with execution permissions. 
 #
 get_executables(){ #Production
 
-	find / -xdev -type f -perm -o+rx -print0 | xargs -0 file > $OUTPUT/FSecure_out/Misc/$OUTFILE-exec-perm-files.txt
+    find / -xdev -type f -perm -o+rx -print0 | xargs -0 sha1sum > $OUTPUT/FSecure_out/Misc/$OUTFILE-exec-perm-files.txt
 
 }
 
@@ -516,7 +494,7 @@ get_suspicios_data(){ #WIP
 	#Find files in dev dir directory. Not common. Might be empty if none found
 	find /dev/ -type f -print0 | xargs -0 file 2>/dev/null > $OUTPUT/FSecure_out/Misc/$OUTFILE-dev-dir-files.txt
 	#If no found there will be single entry with d41d8cd98f00b204e9800998ecf8427e - 
-	find /dev/ -type f -print0 | xargs -0 md5sum > $OUTPUT/FSecure_out/Misc/$OUTFILE-dev-dir-files-hashes.txt
+	find /dev/ -type f -print0 | xargs -0 sha1sum > $OUTPUT/FSecure_out/Misc/$OUTFILE-dev-dir-files-hashes.txt
 
 	#Find potential privilege escalation binaries/modifications (all Setuid Setguid binaries)
 	find / -xdev -type f \( -perm -04000 -o -perm -02000 \) > $OUTPUT/FSecure_out/Misc/$OUTFILE-Setuid-Setguid-tools.txt
@@ -527,7 +505,7 @@ get_suspicios_data(){ #WIP
 # 
 get_pot_webshell(){ #Production
     
-    find / -xdev -type f \( -iname '*.jsp' -o -iname '*.asp' -o -iname '*.php' -o -iname '*.aspx' \) 2>/dev/null -print0 | xargs -0 md5sum > $OUTPUT/FSecure_out/Misc/$OUTFILE-pot-webshell-hashes.txt
+    find / -xdev -type f \( -iname '*.jsp' -o -iname '*.asp' -o -iname '*.php' -o -iname '*.aspx' \) 2>/dev/null -print0 | xargs -0 sha1sum > $OUTPUT/FSecure_out/Misc/$OUTFILE-pot-webshell-hashes.txt
     
     find / -xdev -type f \( -iname '*.jsp' -o -iname '*.asp' -o -iname '*.php' -o -iname '*.aspx' \) 2>/dev/null -print0 | xargs -0 head -1000 > $OUTPUT/FSecure_out/Misc/$OUTFILE-pot-webshell-first-1000.txt
     
@@ -560,14 +538,14 @@ end_colletion(){ #Production
 	 echo $OUTPUT/FSecure_out
 	fi
 	
-	# md5 the tar
+	# SHA1 the tar
 	 echo " "
 	 echo " *************************************************************"
 	 echo "  Collection of triage data complete! "
-	 echo "  Please submit the following file and MD5 hash for analysis."
+	 echo "  Please submit the following file and SHA1 hash for analysis."
 	 echo " *************************************************************"
 	 echo " "
-	md5sum $OUTPUT/FSecure_$OUTFILE.tar.gz 
+	sha1sum $OUTPUT/FSecure_$OUTFILE.tar.gz 
 	 echo " "
 }
 
@@ -605,9 +583,7 @@ case $oscheck in
 			get_startup_files_GNU
 			echo " - Crontabs..."
 			get_cron_GNU
-			echo " - Bin/Sbin file hashes..."
-			get_binhash
-			echo " - Hashing all executables files..."
+			echo " - Getting all executable file hashes..."
 			get_executables
 			echo " - Looking for suspicious files..."
 			get_suspicios_data
@@ -642,9 +618,7 @@ case $oscheck in
 			get_startup_files_GNU
 			echo " - Crontabs..."
 			get_cron_GNU
-			echo " - Bin/Sbin file hashes..."
-			get_binhash
-			echo " - Hashing all executables files..."
+			echo " - Getting all executable file hashes..."
 			get_executables
 			echo " - Looking for suspicious files..."
 			get_suspicios_data
@@ -678,9 +652,7 @@ case $oscheck in
 			get_startup_files_Solaris
 			echo " - Crontabs..."
 			get_cron_Solaris
-			echo " - Bin/Sbin file hashes..."
-			get_binhash
-			echo " - Hashing all executables files..."
+			echo " - Getting all executable file hashes..."
 			get_executables
 			echo " - Looking for suspicious files..."
 			get_suspicios_data
@@ -691,7 +663,37 @@ case $oscheck in
 		;;
 	*)
 		#Incompatible Distribution
-		echo "Incompatible Distribution Detected."
+        {
+			echo "Incompatible Distribution Detected. Using GNU methods and Hoping for the Best"
+			echo " - Home directory hidden files..."
+			get_hidden_home_files
+			echo " - Process info.."
+			get_procinfo_GNU
+			echo " - Network info..."
+			get_netinfo_GNU
+			echo " - Logs..."
+			get_logs_GNU
+			echo " - System info..."
+			get_systeminfo_GNU
+			echo " - Configuration Files..." 
+			get_config_GNU
+			echo " - File timeline..."
+			get_find_timeline
+			echo " - .ssh folder..."
+			get_sshkeynhosts
+			echo " - Boot/Login Scripts..."
+			get_startup_files_GNU
+			echo " - Crontabs..."
+			get_cron_GNU
+			echo " - Getting all executable file hashes..."
+			get_executables
+			echo " - Looking for suspicious files..."
+			get_suspicios_data
+			echo " - Hashing potential webshells..."
+			get_pot_webshell
+			
+		} 2>> $OUTPUT/FSecure_out/$OUTFILE-console-error-log.txt
+        ;;
 		
 esac
 
