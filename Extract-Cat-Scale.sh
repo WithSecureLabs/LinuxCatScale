@@ -9,9 +9,26 @@ else
 	exit 1
 fi
 
-set -e
+#
+# Check for root/sudo privileges
+#
+amiroot(){ #Production
+ROOT_UID="0"
+if [ "$UID" -ne "$ROOT_UID" ] ; then
+ clear
+ echo " "
+ echo " ***************************************************************"
+ echo "  ERROR: You must have root/sudo privileges to run this script!"
+ echo " "
+ echo "  This is required for extraction of the archives with character (unbuffered) special."
+ echo " "
+ echo " ***************************************************************"
+ echo " "
+ exit
+fi
+}
 
- #This is where all the dirty work happens. Code needs to be prettied up. 
+#This is where all the dirty work happens. Code needs to be prettied up. 
 extract()
 {
 		# strip leading dir and extension
@@ -34,18 +51,25 @@ extract()
 				rm -f extracted/$FILE/Logs/*var-adm.tar.gz 
 				if [[ $(find extracted/$FILE/Logs/varadm/ -name "*.gz" | wc -c) -ne 0 ]]; then find extracted/$FILE/Logs/varadm/ -name "*.gz" -print0 | xargs -0 gunzip; fi
 			fi
-			if [ -f extracted/$FILE/System_Info/*etc-files.tar.gz ]; then
-				mkdir extracted/$FILE/System_Info/etc-folder/
-				tar -xf extracted/$FILE/System_Info/*etc-files.tar.gz --strip-components=1 -C extracted/$FILE/System_Info/etc-folder
-				rm -f extracted/$FILE/System_Info/*etc-files.tar.gz
+			if [ -f extracted/$FILE/System_Info/*etc-key-files.tar.gz ]; then
+				mkdir extracted/$FILE/System_Info/etc-key-files/
+				tar -xf extracted/$FILE/System_Info/*etc-key-files.tar.gz --strip-components=1 -C extracted/$FILE/System_Info/etc-key-files
+				rm -f extracted/$FILE/System_Info/*etc-key-files.tar.gz
+			fi
+        	if [ -f extracted/$FILE/System_Info/*etc-modified-files.tar.gz ]; then
+				mkdir extracted/$FILE/System_Info/etc-modified-files/
+				tar -xf extracted/$FILE/System_Info/*etc-modified-files.tar.gz --strip-components=1 -C extracted/$FILE/System_Info/etc-modified-files
+				rm -f extracted/$FILE/System_Info/*etc-modified-files.tar.gz
 			fi
 			if [ -f extracted/$FILE/User_Files/*hidden-user-home-dir.tar.gz ]; then
 				mkdir extracted/$FILE/User_Files/hidden-user-home-dir/ 
 				tar -xf extracted/$FILE/User_Files/*hidden-user-home-dir.tar.gz -C extracted/$FILE/User_Files/hidden-user-home-dir
 				rm -f extracted/$FILE/User_Files/*hidden-user-home-dir.tar.gz
 				find extracted/$FILE/User_Files/hidden-user-home-dir/ -type f -print0 | xargs -0 rename 's/\.//g'
-				mv extracted/$FILE/User_Files/hidden-user-home-dir/home/* extracted/$FILE/User_Files/hidden-user-home-dir/
-				rm -rf extracted/$FILE/User_Files/hidden-user-home-dir/home/
+                if [ -d extracted/$FILE/User_Files/hidden-user-home-dir/home/ ]; then
+			    	mv extracted/$FILE/User_Files/hidden-user-home-dir/home/* extracted/$FILE/User_Files/hidden-user-home-dir/
+				    rm -rf extracted/$FILE/User_Files/hidden-user-home-dir/home/
+                fi
 			fi
 			# If folder is empty there were no files in var/spool/cron/crontabs directory
 			if [ -f extracted/$FILE/Persistence/*cron-folder.tar.gz ]; then
@@ -64,4 +88,5 @@ extract()
 		fi
 }
 
+amiroot
 for f in *.tar.gz; do (extract "$f"); done #for loop to search the directory for all the tar.gz files. Error suppresion not ideal
