@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# F-Secure Consulting - Cat-Scale Linux Collection Script
+# F-Secure InfoSecurity - Cat-Scale Linux Collection Script
 # Author: Mehmet Mert Surmeli
 # Contributers: John Rogers, Joani Green
-# Version: 1.0
-# Release Date: 2020-07-21
-# 
+# Version: 1.1
+# Release Date: 2021-30-06
+#
 # This script is maintained by FSecure Consulting. Please send any enquiries to incident-response@f-secure.com
 #
 # Instructions:
@@ -140,7 +140,7 @@ get_find_timeline(){ #Production
 #
 get_procinfo_GNU(){ #Production
 	
-	echo "      Collecting Active Process ..."
+	echo "      Collecting Active Process..."
 	PS_FORMAT=user,pid,ppid,vsz,rss,tname,stat,stime,time,args
 	if ps axwwSo $PS_FORMAT &> /dev/null; then
 		ps axwwSo $PS_FORMAT > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processes-axwwSo.txt
@@ -161,13 +161,19 @@ get_procinfo_GNU(){ #Production
 	find /proc -maxdepth 2 -wholename '/proc/[0-9]*/status' | xargs cat  >> $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-details.txt
 
 	echo "      Getting the process hashes..."
-	find -L /proc/[0-9]*/exe -print0 | xargs -0 sha1sum 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processhashes.txt	
+	find -L /proc/[0-9]*/exe -print0 2>/dev/null | xargs -0 sha1sum 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-processhashes.txt	
 	
 	echo "      Getting the process symbolic links..."
-	find /proc/[0-9]*/exe -print0 | xargs -0 ls -lh 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-exe-links.txt	
-	
+	find /proc/[0-9]*/exe -print0 2>/dev/null | xargs -0 ls -lh 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-exe-links.txt	
+    
+    echo "      Getting the process map_files hashes..."
+	find -L /proc/[0-9]*/map_files -type f -print0 2>/dev/null | xargs -0 sha1sum 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-map_files-link-hashes.txt
+    
+    echo "      Getting the process map_files links..."
+	find /proc/[0-9]*/map_files -print0 2>/dev/null | xargs -0 ls -lh 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-map_files-links.txt
+    
 	echo "      Getting the process fd links..."
-	find /proc/[0-9]*/fd/* -print0 | xargs -0 ls -lh 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-file-links.txt
+	find /proc/[0-9]*/fd -print0 2>/dev/null | xargs -0 ls -lh 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-fd-links.txt
 	
 	echo "      Getting the process cmdline..."
 	find /proc/[0-9]*/cmdline | xargs head 2>/dev/null > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-process-cmdline.txt
@@ -290,14 +296,27 @@ get_netinfo_Solaris(){ #Production
 #
 get_config_GNU(){ #Production
 	
-	# Follows links. Symbolik links replaced with the linked file under same name.
-	tar -czvf $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-files.tar.gz --dereference --hard-dereference /etc/ 2>/dev/null > $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-files-list.txt 
+    # Get key host files
+	files="( -iname yum* -o -iname apt* -o -iname hosts* -o -iname passwd \
+	-o -iname sudoers* -o -iname cron* -o -iname ssh* -o -iname rc* -o -iname systemd* -o -iname anacron  \
+	-o -iname inittab -o -iname init.d -o -iname profile* -o -iname bash* )"
+    find /etc/ -type f,d $files -print0 | xargs -0 tar -czvf $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-key-files.tar.gz 2>/dev/null > $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-key-files-list.txt
+    
+    # Get files that were modified in the last 90 days, collect all files, including symbolic links
+    find /etc/ -mtime -90 -print0 | xargs -0 tar -czvf $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-modified-files.tar.gz --dereference --hard-dereference 2>/dev/null > $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-modified-files-list.txt
 	
 }
+
 get_config_Solaris(){ #Production
 	
-	# Follows links. Symbolik links replaced with the linked file under same name.
-	find /etc/ -type f -print0 | xargs -0 tar -czvf $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-files.tar.gz 2>/dev/null > $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-files-list.txt 
+    # Get key host files
+	files="( ( -iname yum* -o -iname apt* -o -iname hosts* -o -iname passwd \
+	-o -iname sudoers* -o -iname cron* -o -iname ssh* -o -iname rc* -o -iname systemd* -o -iname anacron  \
+	-o -iname inittab -o -iname init.d -o -iname profile* -o -iname bash* ) -a ( -type f -o -type d ) )"
+	find /etc/ $files -print0 | xargs -0 tar -czvf $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-key-files.tar.gz 2>/dev/null > $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-key-files-list.txt 
+    
+    # Get files that were modified in the last 90 days, collect all files, including symbolic links
+    find /etc/ -mtime -90 -print0 | xargs -0 tar -czvf $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-modified-files.tar.gz 2>/dev/null > $OUTPUT/FSecure_out/System_Info/$OUTFILE-etc-modified-files-list.txt 
 	
 }
 
@@ -316,7 +335,8 @@ get_logs_GNU(){ #Production
 	find /var/log -maxdepth 1 -type f -name "btmp*" -exec last -Faiwx -f {} \; > $OUTPUT/FSecure_out/Logs/$OUTFILE-last-btmp.txt
 	
 	echo "      Collecting Active Logon information(utmp)..."
-	find / -maxdepth 2 -xdev -type f -name "utmp*" -exec last -Faiwx -f {} \; > $OUTPUT/FSecure_out/Logs/$OUTFILE-last-utmp.txt
+	find / -maxdepth 2 -type f -name "utmp*" -exec last -Faiwx -f {} \; > $OUTPUT/FSecure_out/Logs/$OUTFILE-last-utmp.txt
+	find / -maxdepth 2 -type f -name "utmp*" -exec utmpdump {} \; > $OUTPUT/FSecure_out/Logs/$OUTFILE-last-utmpdump.txt
 	
 	echo "      Collecting Historic Logon information(wtmp)..."
 	find /var/log -maxdepth 1 -type f -name "wtmp*" -exec last -Faiwx -f {} \; > $OUTPUT/FSecure_out/Logs/$OUTFILE-last-wtmp.txt
@@ -489,7 +509,7 @@ get_executables(){ #Production
 #
 # Get suspicious information functions
 #
-get_suspicios_data(){ #WIP
+get_suspicios_data(){ #Production
 
 	#Find files in dev dir directory. Not common. Might be empty if none found
 	find /dev/ -type f -print0 | xargs -0 file 2>/dev/null > $OUTPUT/FSecure_out/Misc/$OUTFILE-dev-dir-files.txt
@@ -565,7 +585,7 @@ case $oscheck in
 			echo "Ubuntu\Debian Detected. Collecting;"
 			echo " - Home directory hidden files..."
 			get_hidden_home_files
-			echo " - Process info.."
+			echo " - Process info..."
 			get_procinfo_GNU
 			echo " - Network info..."
 			get_netinfo_GNU
