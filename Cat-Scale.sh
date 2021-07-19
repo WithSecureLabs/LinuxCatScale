@@ -131,7 +131,7 @@ get_find_timeline(){ #Production
 	{
 		echo "Inode,Hard link Count,Full Path,Last Access,Last Modification,Last Status Change,File Creation,User,Group,File Permissions,File Size(bytes)"
 		find / -xdev -type f -print0 | xargs -0 stat --printf="%i,%h,%n,%x,%y,%z,%w,%U,%G,%A,%s\n" 2>/dev/null
-	}> $OUTPUT/FSecure_out/$OUTFILE-full-timeline.csv
+	}> $OUTPUT/FSecure_out/Misc/$OUTFILE-full-timeline.csv
 	
 }
 
