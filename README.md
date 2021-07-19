@@ -114,7 +114,7 @@ viminfo                         - All viminfo files... Can contain vi historic c
 Note that the script will likely alter artefacts on endpoints. Care should be taken when using the script. This is not meant to take forensically sound disk images of the remote endpoints.
 
 
-## Tested OSs
+## Tested OSes
 
 - Ubuntu 16.4
 - Centos
