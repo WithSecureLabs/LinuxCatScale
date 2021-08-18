@@ -414,6 +414,7 @@ get_systeminfo_GNU(){ #Production
 	
 	echo "      Collecting modinfo..."
 	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do echo -e "\nModule: $i"; modinfo $i ; done > $OUTPUT/FSecure_out/System_Info/$OUTFILE-modinfo.txt
+
 	echo "      Collecting loaded module md5s..."
 	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do modinfo $i | grep "filename:" | awk '{print $2}' | xargs -I{} md5sum {} ; done > $OUTPUT/FSecure_out/System_Info/$OUTFILE-module-md5.txt
 	
