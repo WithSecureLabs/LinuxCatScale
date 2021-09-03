@@ -2,9 +2,9 @@
 #
 # Cat-Scale Linux Collection Script
 # Author: Mehmet Mert Surmeli
-# Contributers: John Rogers, Joani Green
-# Version: 1.1
-# Release Date: 2021-30-06
+# Contributers: John Rogers, Joani Green, Nikolaos Pavlidis
+# Version: 1.2
+# Release Date: 2021-09-03
 #
 # Latest public release available at https://github.com/FSecureLABS/LinuxCatScale
 #
