@@ -179,8 +179,10 @@ get_procinfo_GNU(){ #Production
 	find /proc/[0-9]*/cmdline | xargs head 2>/dev/null > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-process-cmdline.txt
 
 	if which lsof &>/dev/null; then
-		lsof -n -P -e /run/user/1000/gvfs > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-lsof-list-open-files.txt
-	fi
+
+		lsof +c0 -M -R -V -w -n -P -e /run/user/1000/gvfs > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-lsof-list-open-files.txt
+
+  fi
 
 }
 get_procinfo_Solaris(){ #Production
@@ -247,7 +249,11 @@ get_netinfo_GNU(){ #Production
 	
 	#Get iptables. Firewall rules.
 	echo "      Collecting IPtables..."
+
+	iptables -L -n -v --line-numbers > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-iptables-numerical.txt
+  
 	iptables -L > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-iptables.txt
+
 	
 
 	#Get SeLinux Verbose information
@@ -407,6 +413,9 @@ get_systeminfo_GNU(){ #Production
 	echo "      Collecting df..."
 	df > $OUTPUT/catscale_out/System_Info/$OUTFILE-df.txt
 	
+	echo "      Collecting mount..."
+	mount > $OUTPUT/FSecure_out/System_Info/$OUTFILE-mount.txt
+	
 	echo "      Collecting attached USB device info..."
 	lsusb -v > $OUTPUT/catscale_out/System_Info/$OUTFILE-lsusb.txt
 
@@ -416,9 +425,21 @@ get_systeminfo_GNU(){ #Production
 	echo "      Collecting lsmod..."
 	lsmod > $OUTPUT/catscale_out/System_Info/$OUTFILE-lsmod.txt
 	
-	echo "      Collecting proc/modules..."
+	echo "      Collecting modinfo..."
+	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do echo -e "\nModule: $i"; modinfo $i ; done > $OUTPUT/FSecure_out/System_Info/$OUTFILE-modinfo.txt
+
+	echo "      Collecting loaded modules..."
+	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do modinfo $i | grep "filename:" | awk '{print $2}' | xargs -I{} sha1sum {} ; done > $OUTPUT/FSecure_out/System_Info/$OUTFILE-module-sha1.txt
 	
-	cat '/proc/modules' > $OUTPUT/catscale_out/System_Info/$OUTFILE-procmod.txt
+	echo "      Collecting proc/modules..."
+	cat '/proc/modules' > $OUTPUT/FSecure_out/System_Info/$OUTFILE-procmod.txt
+	
+	echo "      Collecting sudo config..."
+	sudo -V > $OUTPUT/FSecure_out/System_Info/$OUTFILE-sudo.txt
+
+	echo "      Collecting dmesg..."
+	dmesg -T > $OUTPUT/FSecure_out/System_Info/$OUTFILE-dmesg.txt
+
 
 }
 get_systeminfo_Solaris(){ #Production
@@ -446,6 +467,25 @@ get_systeminfo_Solaris(){ #Production
 	
 }
 
+#
+# Get installed pacakge information
+#
+get_packageinfo_GNU(){ #Production
+
+	echo "      Collecting installed package info..."
+	if dpkg --help &>/dev/null; then
+		dpkg --list > $OUTPUT/FSecure_out/System_Info/$OUTFILE-deb-packages.txt
+	else 
+		rpm -qa > $OUTPUT/FSecure_out/System_Info/$OUTFILE-rpm-packages.txt
+	fi
+	
+}
+get_packageinfo_Solaris(){ #Production
+
+	echo "      Collecting installed package info..."
+	pkginfo > $OUTPUT/FSecure_out/System_Info/$OUTFILE-solaris-packages.txt
+	
+}
 
 #
 # Persistence Checks functions
@@ -600,6 +640,8 @@ case $oscheck in
 			get_logs_GNU
 			echo " - System info..."
 			get_systeminfo_GNU
+			echo " - Installed Packages..."
+			get_packageinfo_GNU
 			echo " - Configuration Files..." 
 			get_config_GNU
 			echo " - File timeline..."
@@ -635,6 +677,8 @@ case $oscheck in
 			get_logs_GNU
 			echo " - System info..."
 			get_systeminfo_GNU
+			echo " - Installed Packages..."
+			get_packageinfo_GNU
 			echo " - Configuration Files..." 
 			get_config_GNU
 			echo " - File timeline..."
@@ -669,6 +713,8 @@ case $oscheck in
 			get_logs_Solaris
 			echo " - System info..."
 			get_systeminfo_Solaris
+			echo " - Installed Packages..."
+			get_packageinfo_Solaris
 			echo " - Configuration Files..." 
 			get_config_Solaris
 			echo " - File timeline..."
@@ -702,6 +748,8 @@ case $oscheck in
 			get_logs_GNU
 			echo " - System info..."
 			get_systeminfo_GNU
+			echo " - Installed Packages..."
+			get_packageinfo_GNU
 			echo " - Configuration Files..." 
 			get_config_GNU
 			echo " - File timeline..."
