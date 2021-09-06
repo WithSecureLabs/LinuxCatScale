@@ -421,6 +421,8 @@ get_systeminfo_GNU(){ #Production
 
 	echo "      Collecting kernel release..."	
 	find /etc ! -path /etc -prune -name "*release*" -print0 | xargs -0 cat 2>/dev/null > $OUTPUT/catscale_out/System_Info/$OUTFILE-release.txt
+	echo -n "KERNELVERSION(uname -r)=" >> $OUTPUT/catscale_out/System_Info/$OUTFILE-release.txt
+	uname -r >> $OUTPUT/catscale_out/System_Info/$OUTFILE-release.txt
 
 	echo "      Collecting lsmod..."
 	lsmod > $OUTPUT/catscale_out/System_Info/$OUTFILE-lsmod.txt
