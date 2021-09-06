@@ -131,6 +131,7 @@ get_find_timeline(){ #Production
 	{
 		echo "Inode,Hard link Count,Full Path,Last Access,Last Modification,Last Status Change,File Creation,User,Group,File Permissions,File Size(bytes)"
 		find / -xdev -print0 | xargs -0 stat --printf="%i,%h,%n,%x,%y,%z,%w,%U,%G,%A,%s\n" 2>/dev/null
+		find /dev/shm -print0 | xargs -0 stat --printf="%i,%h,%n,%x,%y,%z,%w,%U,%G,%A,%s\n" 2>/dev/null
 	}> $OUTPUT/catscale_out/Misc/$OUTFILE-full-timeline.csv
 	
 }
