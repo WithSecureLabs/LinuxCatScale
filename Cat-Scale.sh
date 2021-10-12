@@ -102,7 +102,9 @@ starttheshow(){ #Production
 	mkdir $OUTPUT/catscale_out/Persistence
 	mkdir $OUTPUT/catscale_out/User_Files
 	mkdir $OUTPUT/catscale_out/Misc
-	
+	mkdir $OUTPUT/catscale_out/Docker
+	mkdir $OUTPUT/catscale_out/Podman
+	mkdir $OUTPUT/catscale_out/Virsh
 	# Print OS info into error log
 	echo " "
 	echo "Running Collection Scripts "
@@ -181,7 +183,7 @@ get_procinfo_GNU(){ #Production
 
 	if which lsof &>/dev/null; then
 
-		lsof +c0 -M -R -V -w -n -P -e /run/user/1000/gvfs > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-lsof-list-open-files.txt
+		lsof +c0 -M -R -V -w -n -P -e /run/user/1000/gvfs > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-lsof-list-open-files.txt
 
   fi
 
@@ -251,7 +253,7 @@ get_netinfo_GNU(){ #Production
 	#Get iptables. Firewall rules.
 	echo "      Collecting IPtables..."
 
-	iptables -L -n -v --line-numbers > $OUTPUT/FSecure_out/Process_and_Network/$OUTFILE-iptables-numerical.txt
+	iptables -L -n -v --line-numbers > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-iptables-numerical.txt
   
 	iptables -L > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-iptables.txt
 
@@ -351,6 +353,9 @@ get_logs_GNU(){ #Production
 	echo "      Collecting lastlog..."
 	lastlog > $OUTPUT/catscale_out/Logs/$OUTFILE-lastlog.txt
 
+	echo "      Checking passwd integrity"
+	pwck -r > $OUTPUT/catscale_out/Logs/$OUTFILE-passwd-check.txt
+
 	#Collect all files in in /var/log folder.
 	echo "      Collecting /var/log/ folder..."
 	tar -czvf $OUTPUT/catscale_out/Logs/$OUTFILE-var-log.tar.gz --dereference --hard-dereference --sparse /var/log > $OUTPUT/catscale_out/Logs/$OUTFILE-var-log-list.txt
@@ -415,7 +420,7 @@ get_systeminfo_GNU(){ #Production
 	df > $OUTPUT/catscale_out/System_Info/$OUTFILE-df.txt
 	
 	echo "      Collecting mount..."
-	mount > $OUTPUT/FSecure_out/System_Info/$OUTFILE-mount.txt
+	mount > $OUTPUT/catscale_out/System_Info/$OUTFILE-mount.txt
 	
 	echo "      Collecting attached USB device info..."
 	lsusb -v > $OUTPUT/catscale_out/System_Info/$OUTFILE-lsusb.txt
@@ -429,19 +434,19 @@ get_systeminfo_GNU(){ #Production
 	lsmod > $OUTPUT/catscale_out/System_Info/$OUTFILE-lsmod.txt
 	
 	echo "      Collecting modinfo..."
-	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do echo -e "\nModule: $i"; modinfo $i ; done > $OUTPUT/FSecure_out/System_Info/$OUTFILE-modinfo.txt
+	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do echo -e "\nModule: $i"; modinfo $i ; done > $OUTPUT/catscale_out/System_Info/$OUTFILE-modinfo.txt
 
 	echo "      Collecting loaded modules..."
-	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do modinfo $i | grep "filename:" | awk '{print $2}' | xargs -I{} sha1sum {} ; done > $OUTPUT/FSecure_out/System_Info/$OUTFILE-module-sha1.txt
+	for i in `lsmod | awk '{print $1}' | sed '/Module/d'`; do modinfo $i | grep "filename:" | awk '{print $2}' | xargs -I{} sha1sum {} ; done > $OUTPUT/catscale_out/System_Info/$OUTFILE-module-sha1.txt
 	
 	echo "      Collecting proc/modules..."
-	cat '/proc/modules' > $OUTPUT/FSecure_out/System_Info/$OUTFILE-procmod.txt
+	cat '/proc/modules' > $OUTPUT/catscale_out/System_Info/$OUTFILE-procmod.txt
 	
 	echo "      Collecting sudo config..."
-	sudo -V > $OUTPUT/FSecure_out/System_Info/$OUTFILE-sudo.txt
+	sudo -V > $OUTPUT/catscale_out/System_Info/$OUTFILE-sudo.txt
 
 	echo "      Collecting dmesg..."
-	dmesg -T > $OUTPUT/FSecure_out/System_Info/$OUTFILE-dmesg.txt
+	dmesg -T > $OUTPUT/catscale_out/System_Info/$OUTFILE-dmesg.txt
 
 
 }
@@ -471,22 +476,95 @@ get_systeminfo_Solaris(){ #Production
 }
 
 #
+# Get Docker and Virtual machine info
+#
+get_docker_info(){ #Testing
+	if docker --help &>/dev/null; then
+		echo "      Collecting Docker info..."
+		docker container ls --all --size > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-ls-all-size.txt
+		docker image ls --all > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-image-ls-all.txt
+		docker info > $OUTPUT/catscale_out/Docker/docker-info.txt
+		docker container ps -all | sed 1d | cut -d" " -f 1 | while read line; do 
+			docker container logs $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-logs-$line.txt
+		done 2>/dev/null
+		docker container ps -all | sed 1d | cut -d" " -f 1 | while read line; do
+		 	docker inspect $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-inspect-$line.txt;
+		done 2>/dev/null
+		docker network ls | sed 1d | cut -d" " -f 1 | while read line; do 
+			docker network inspect $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-network-inspect-$line.txt
+		done 2>/dev/null
+		docker ps | sed 1d | cut -d" " -f 1 | while read line; do 		
+			docker top $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-top-$line.txt
+		done 2>/dev/null
+		docker version > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-version.txt
+	fi
+	if podman --help &>/dev/null; then
+		echo "      Collecting Podman info..."
+		podman container ls --all --size > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-container-ls-all-size.txt
+		podman image ls --all > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-image-ls-all.txt
+		podman info > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-info.txt
+		podman container ps -all | sed 1d | cut -d" " -f 1 | while read line; do
+			podman container logs $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-container-logs-$line.txt
+		done 2>/dev/null
+		podman container ps -all | sed 1d | cut -d" " -f 1 | while read line; do
+			podman inspect $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-inspect-$line.txt
+		done 2>/dev/null
+		podman network ls | sed 1d | cut -d" " -f 1 | while read line; do
+			podman network inspect $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-network-inspect-$line.txt
+		done 2>/dev/null
+		podman ps | sed 1d | cut -d" " -f 1 | while read line; do 
+			podman top $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-top-$line.txt
+		done 2>/dev/null
+		podman version > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-version.txt
+	fi
+	if virsh --help &>/dev/null; then
+		echo "      Collecting Virsh info..."
+		virsh list --all > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-list-all.txt
+		virsh list --name | while read line; do 
+			virsh domifaddr $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-domifaddr-$line.txt
+		done 2>/dev/null
+		virsh list --name | while read line; do 
+			virsh dominfo $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-dominfo-$line.txt
+		done 2>/dev/null
+		virsh list --name | while read line; do 
+			virsh dommemstat $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-dommemstat-$line.txt
+		done 2> /dev/null
+		virsh list --name | while read line; do 
+			virsh snapshot-list $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-snapshot-list-$line.txt
+		done 2>/dev/null
+		virsh list --name | while read line; do 
+			virsh vcpuinfo $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-vcpuinfo-$line.txt
+		done 2>/dev/null
+		virsh net-list --all > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-net-list-all.txt
+		virsh net-list --all --name | while read line; do 
+			virsh net-info $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-net-info-$line.txt
+		done 2>/dev/null
+		virsh net-list --all --name | while read line; do 
+			virsh net-dhcp-leases $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-net-dhcp-leases-$line.txt
+		done 2>/dev/null
+		virsh nodeinfo > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-nodeinfo.txt
+		virsh pool-list --all > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-pool-list-all.txt
+		virt-top -n 1 > $OUTPUT/catscale_out/Virsh/$OUTFILE-virt-top-n-1.txt
+	fi
+}
+
+#
 # Get installed pacakge information
 #
 get_packageinfo_GNU(){ #Production
 
 	echo "      Collecting installed package info..."
 	if dpkg --help &>/dev/null; then
-		dpkg --list > $OUTPUT/FSecure_out/System_Info/$OUTFILE-deb-packages.txt
+		dpkg --list > $OUTPUT/catscale_out/System_Info/$OUTFILE-deb-packages.txt
 	else 
-		rpm -qa > $OUTPUT/FSecure_out/System_Info/$OUTFILE-rpm-packages.txt
+		rpm -qa > $OUTPUT/catscale_out/System_Info/$OUTFILE-rpm-packages.txt
 	fi
 	
 }
 get_packageinfo_Solaris(){ #Production
 
 	echo "      Collecting installed package info..."
-	pkginfo > $OUTPUT/FSecure_out/System_Info/$OUTFILE-solaris-packages.txt
+	pkginfo > $OUTPUT/catscale_out/System_Info/$OUTFILE-solaris-packages.txt
 	
 }
 
@@ -680,6 +758,8 @@ case $oscheck in
 			get_logs_GNU
 			echo " - System info..."
 			get_systeminfo_GNU
+			echo " - Docker and Virtual Machine info..."
+			get_docker_info
 			echo " - Installed Packages..."
 			get_packageinfo_GNU
 			echo " - Configuration Files..." 
@@ -716,6 +796,8 @@ case $oscheck in
 			get_logs_Solaris
 			echo " - System info..."
 			get_systeminfo_Solaris
+			echo " - Docker and Virtual Machine info..."
+			get_docker_info
 			echo " - Installed Packages..."
 			get_packageinfo_Solaris
 			echo " - Configuration Files..." 
@@ -751,6 +833,8 @@ case $oscheck in
 			get_logs_GNU
 			echo " - System info..."
 			get_systeminfo_GNU
+			echo " - Docker and Virtual Machine info..."
+			get_docker_info
 			echo " - Installed Packages..."
 			get_packageinfo_GNU
 			echo " - Configuration Files..." 
