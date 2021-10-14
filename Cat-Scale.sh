@@ -181,6 +181,9 @@ get_procinfo_GNU(){ #Production
 	echo "      Getting the process cmdline..."
 	find /proc/[0-9]*/cmdline | xargs head 2>/dev/null > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-process-cmdline.txt
 
+	echo "      Getting the process environment variables..."
+	find /proc/[0-9]*/environ | xargs head 2>/dev/null > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-process-environment.txt
+
 	if which lsof &>/dev/null; then
 
 		lsof +c0 -M -R -V -w -n -P -e /run/user/1000/gvfs > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-lsof-list-open-files.txt
@@ -483,7 +486,7 @@ get_docker_info(){ #Testing
 		echo "      Collecting Docker info..."
 		docker container ls --all --size > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-ls-all-size.txt
 		docker image ls --all > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-image-ls-all.txt
-		docker info > $OUTPUT/catscale_out/Docker/docker-info.txt
+		docker info > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-info.txt
 		docker container ps -all | sed 1d | cut -d" " -f 1 | while read line; do 
 			docker container logs $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-logs-$line.txt
 		done 2>/dev/null
@@ -528,7 +531,7 @@ get_docker_info(){ #Testing
 		done 2>/dev/null
 		virsh list --name | while read line; do 
 			virsh dommemstat $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-dommemstat-$line.txt
-		done 2> /dev/null
+		done 2>/dev/null
 		virsh list --name | while read line; do 
 			virsh snapshot-list $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-snapshot-list-$line.txt
 		done 2>/dev/null
