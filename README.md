@@ -36,78 +36,7 @@ This project has predefined grok filters to ingest data into elastic, feel free 
 
 ## What does it collect?
 
-This script will procude the following files/folders which can be reviewed as text files or using Elk Stack.
-
-```
-bash_history                    - Bash history for all users
-bash_profile                    - Bash profile file for all users
-bash_rc                         - Bash_rc file
-full-timeline.csv               - Timeline of all files in the following directories: /home/* + var/www/* + /tmp/ + /dev/shm/ + /bin + /sbin
-bin-dir-timeline                - Timeline of all files in /bin
-binhashes.txt                   - Hash of all executable files under $PATH variable
-btmp-lastlog.txt                - btmp last log
-console-error-log.txt           - This were all the errors from the script is forwarded to
-cpuinfo.txt                     - CPU info
-dev-shm-dir-timeline            - Timeline of all files in /dev/shm/
-df.txt                          - Information about the file system on which each FILE resides,or all file systems by default.
-dhcp.txt                        - Resolver configuration file resolv.conf
-executables-list.txt            - All ELF files on disk with +x attribute
-group.txt                       - List of groups and the members belonging to each group
-home-dir-timeline               - Timeline of all files in /home/*
-host.conf.txt                   - Resolver configuration file host.conf
-hosts.allow.txt                 - Host access control file hosts.allow
-hosts.deny.txt                  - Host access control file hosts.deny
-hosts.txt                       - Static table lookup for hostnames /etc/hosts
-ifconfig.txt                    - ifconfig -a Output
-iptables.txt                    - Tables of IPv4 and IPv6 packet filter rules in the Linux kernel.
-lastbad.txt                     - Records failed login attempts
-lastlog.txt                     - The most recent login of all users or of a given user
-last.txt                        - History of all logins and logouts
-lsmod.txt                       - Kernel modules are currently loaded
-lsof-processes.txt              - List of all open files and the processes that opened them.
-lsusb.txt                       - Attached USB device info
-md5-ps.txt                      - ps command bin md5
-meminfo.txt                     - Memory info
-netstat-ano.txt                 - Listing All Sockets, in numeric form with timer info
-netstat-antup.txt               - All tcp/udp connection in numeric form with process ID
-netstat-list.txt                - All tcp/udp connection in numeric form with process ID without headers
-num-proc.txt                    - number of processes according to ps command
-num-ps.txt                      - number of processes according to /proc directory
-package-list.txt                - All files in all rpm packages
-packages-result.txt             - all executables that are not part of rpm packages
-passwd.txt                      - Copy of the passwd file
-persistence-anacron.txt         - All Anacron jobs
-persistence-cronlist.txt        - All Cron jobs
-persistence-initd.txt           - All initd scripts
-persistence-profiled.txt        - Scripts that run when User logs in
-persistence-rc-scripts.txt      - All rc scripts. (run level scipts)
-persistence-shellrc-etc.txt     - All startup script contents in /etc/
-persistence-shellrc-home.txt    - All startup script contents in /home/
-persistence-shellrc-root.txt    - All startup script contents in /root/
-persistence-systemdlist.txt     - All systemd services and execution commandlines
-process-details.txt             - All running process details and status information
-processes-list.txt              - All running process acording to ps
-processes.txt                   - All running process acording to /proc/ directory
-processhashes.txt               - Hash of all running processes
-procmod.txt                     - Loaded modules for all processes
-release.txt                     - OS information
-routetable.txt                  - Contents of kernel routing table. route command output
-sbin-dir-timeline               - Timeline of all files in /sbin/*
-service_status.txt              - All running service and their status.
-ssh_config.txt                  - ssh service config file
-sshd_config.txt                 - ssh service config file
-sudoers.txt                         - List of sudoers
-tmp-dir-timeline                    - Timeline of all files in /tmp/*
-tmp-executable-files-for-diff.txt   - tmp-executable-files.txt without executable type metadata for later diff operation with packages
-tmp-executable-files.txt            - All files with +x attributes (executables)
-tmp-types.txt                       - tmp file for Find types of executable(script\|ELF\|executable)
-var-www-dir-timeline                - Timeline of all files in /var/www/*
-whoandwhat.txt                  - w command output. Who is logged on and what they are doing.
-who.txt                         - List of users who are currently logged in
-wtmp-lastlog.txt                - wtmp last log
-varlogs                         - All contents of /var/log
-viminfo                         - All viminfo files... Can contain vi historic commands
-```
+This script will produce output and archive. Currently most up to date what it collects is covered in the blog post here: https://labs.f-secure.com/tools/cat-scale-linux-incident-response-collection/
 
 ## Disclaimer
 
