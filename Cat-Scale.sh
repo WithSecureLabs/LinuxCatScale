@@ -239,7 +239,7 @@ get_netinfo_GNU(){ #Production
 	
 	#Get ip and interface config
 	echo "      Collecting IP and Interface Config..."
-	if ip a &>/dev/null; then
+	if which ip &>/dev/null; then
 		ip a > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-ip-a.txt
 	else 
 		ifconfig -a > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-ifconfig.txt
@@ -263,7 +263,7 @@ get_netinfo_GNU(){ #Production
 	
 
 	#Get SeLinux Verbose information
-	if sestatus &>/dev/null; then
+	if which sestatus &>/dev/null; then
 		echo "      Collecting SELinux status..."
 		sestatus -v > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-selinux.txt
 		echo "      Collecting SELinux booleans..."
@@ -293,7 +293,7 @@ get_netinfo_Solaris(){ #Production
 	netstat -rn > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-routetable.txt
 	
 	#Get SeLinux Verbose information
-	if sestatus &>/dev/null; then
+	if which sestatus &>/dev/null; then
 		echo "      Collecting SELinux status..."
 		sestatus -v > $OUTPUT/catscale_out/Process_and_Network/$OUTFILE-selinux.txt
 		echo "      Collecting SELinux booleans..."
@@ -482,67 +482,53 @@ get_systeminfo_Solaris(){ #Production
 # Get Docker and Virtual machine info
 #
 get_docker_info(){ #Testing
-	if docker --help &>/dev/null; then
+	if which docker &>/dev/null; then
 		echo "      Collecting Docker info..."
 		docker container ls --all --size > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-ls-all-size.txt
 		docker image ls --all > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-image-ls-all.txt
 		docker info > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-info.txt
-		docker container ps -all | sed 1d | cut -d" " -f 1 | while read line; do 
+		docker container ps --all -q | while read line; do 
+			docker inspect $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-inspect-$line.txt
+			docker container top $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-top-$line.txt
 			docker container logs $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-logs-$line.txt
-		done 2>/dev/null
-		docker container ps -all | sed 1d | cut -d" " -f 1 | while read line; do
-		 	docker inspect $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-inspect-$line.txt;
+			docker container port $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-port-$line.txt
+			docker container diff $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-container-diff-$line.txt
 		done 2>/dev/null
 		docker network ls | sed 1d | cut -d" " -f 1 | while read line; do 
 			docker network inspect $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-network-inspect-$line.txt
 		done 2>/dev/null
-		docker ps | sed 1d | cut -d" " -f 1 | while read line; do 		
-			docker top $line > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-top-$line.txt
-		done 2>/dev/null
 		docker version > $OUTPUT/catscale_out/Docker/$OUTFILE-docker-version.txt
 	fi
-	if podman --help &>/dev/null; then
+	if which podman &>/dev/null; then
 		echo "      Collecting Podman info..."
 		podman container ls --all --size > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-container-ls-all-size.txt
 		podman image ls --all > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-image-ls-all.txt
 		podman info > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-info.txt
-		podman container ps -all | sed 1d | cut -d" " -f 1 | while read line; do
-			podman container logs $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-container-logs-$line.txt
-		done 2>/dev/null
-		podman container ps -all | sed 1d | cut -d" " -f 1 | while read line; do
+		podman container ps --all -q | while read line; do
 			podman inspect $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-inspect-$line.txt
+			podman container top $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-top-$line.txt
+			podman container logs $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-container-logs-$line.txt
+			podman container port $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-container-port-$line.txt
+			podman container diff $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-container-diff-$line.txt
 		done 2>/dev/null
 		podman network ls | sed 1d | cut -d" " -f 1 | while read line; do
 			podman network inspect $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-network-inspect-$line.txt
 		done 2>/dev/null
-		podman ps | sed 1d | cut -d" " -f 1 | while read line; do 
-			podman top $line > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-top-$line.txt
-		done 2>/dev/null
 		podman version > $OUTPUT/catscale_out/Podman/$OUTFILE-podman-version.txt
 	fi
-	if virsh --help &>/dev/null; then
+	if which virsh &>/dev/null; then
 		echo "      Collecting Virsh info..."
 		virsh list --all > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-list-all.txt
 		virsh list --name | while read line; do 
 			virsh domifaddr $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-domifaddr-$line.txt
-		done 2>/dev/null
-		virsh list --name | while read line; do 
 			virsh dominfo $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-dominfo-$line.txt
-		done 2>/dev/null
-		virsh list --name | while read line; do 
 			virsh dommemstat $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-dommemstat-$line.txt
-		done 2>/dev/null
-		virsh list --name | while read line; do 
 			virsh snapshot-list $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-snapshot-list-$line.txt
-		done 2>/dev/null
-		virsh list --name | while read line; do 
 			virsh vcpuinfo $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-vcpuinfo-$line.txt
 		done 2>/dev/null
 		virsh net-list --all > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-net-list-all.txt
 		virsh net-list --all --name | while read line; do 
 			virsh net-info $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-net-info-$line.txt
-		done 2>/dev/null
-		virsh net-list --all --name | while read line; do 
 			virsh net-dhcp-leases $line > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-net-dhcp-leases-$line.txt
 		done 2>/dev/null
 		virsh nodeinfo > $OUTPUT/catscale_out/Virsh/$OUTFILE-virsh-nodeinfo.txt
@@ -557,7 +543,7 @@ get_docker_info(){ #Testing
 get_packageinfo_GNU(){ #Production
 
 	echo "      Collecting installed package info..."
-	if dpkg --help &>/dev/null; then
+	if which dpkg &>/dev/null; then
 		dpkg --list > $OUTPUT/catscale_out/System_Info/$OUTFILE-deb-packages.txt
 	else 
 		rpm -qa > $OUTPUT/catscale_out/System_Info/$OUTFILE-rpm-packages.txt
@@ -633,7 +619,7 @@ get_cron_Solaris(){ #Production
 #
 get_executables(){ #Production
 
-    find / -xdev -type f -perm -o+rx -print0 | xargs -0 sha1sum > $OUTPUT/catscale_out/Misc/$OUTFILE-exec-perm-files.txt
+    find / -type f -perm -o+rx -print0 | xargs -0 sha1sum > $OUTPUT/catscale_out/Misc/$OUTFILE-exec-perm-files.txt
 
 }
 
@@ -665,7 +651,7 @@ get_pot_webshell(){ #Production
 # 
 # Artefact packaging and clean up
 # 
-end_colletion(){ #Production
+end_collection(){ #Production
 
 	# Archive/Compress files
 	echo " "
@@ -862,5 +848,5 @@ case $oscheck in
 		
 esac
 
-end_colletion
+end_collection
 exit
