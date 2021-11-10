@@ -29,7 +29,7 @@
 function usage {
 cat << EOF
 
-Usage: sudo $0 [-d OUTDIR ] [-f OUTFILE ] [ -o OUTROOT ] [-p OUTFILE_PREFIX ]
+Usage: sudo $0 [ -d OUTDIR ] [ -f OUTFILE ] [ -o OUTROOT ] [ -p OUTFILE_PREFIX ]
 
  -d	OUTDIR, Optional, Directory where output will be staged while running CatScale. Overwrites default, which is "catscale_out" 
  -f	OUTFILE, Optional, Name of resultant archive file created by CatScale (.tar.gz will be appended by the script). Overwrites default, which is "catscale_$(hostname -s)-$date +"%Y%m%d-%H%M")"
