@@ -1,10 +1,8 @@
 #!/bin/bash
 #
 # Cat-Scale Linux Collection Script
-# Author: Mehmet Mert Surmeli
-# Contributers: John Rogers, Joani Green, Nikolaos Pavlidis
-# Version: 1.2
-# Release Date: 2021-09-03
+# Version: 1.3
+# Release Date: 2021-10-11
 #
 # Latest public release available at https://github.com/FSecureLABS/LinuxCatScale
 #
@@ -32,8 +30,8 @@ cat << EOF
 Usage: sudo $0 [ -d OUTDIR ] [ -f OUTFILE ] [ -o OUTROOT ] [ -p OUTFILE_PREFIX ]
 
  -d	OUTDIR, Optional, Directory where output will be staged while running CatScale. Overwrites default, which is "catscale_out" 
- -f	OUTFILE, Optional, Name of resultant archive file created by CatScale (.tar.gz will be appended by the script). Overwrites default, which is "catscale_$(hostname -s)-$date +"%Y%m%d-%H%M")"
- -o	OUTROOT, Optional, Root directory/filesystem for output to be saved. Overwrites default, which is "$(pwd)" 
+ -f	OUTFILE, Optional, Name of resultant archive file created by CatScale (.tar.gz will be appended by the script). Overwrites default, which has the format of "catscale_<Hostname>-<DateAndTime>"
+ -o	OUTROOT, Optional, Root directory/filesystem for output to be saved. Overwrites default, which is set to current directory script is running from, $(pwd). 
  -p	OUTFILE_PREFIX, Optional, Prefix to use for archive file. Overwrites default, which is "catscale_"
 
 EOF
