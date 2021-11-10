@@ -29,13 +29,12 @@
 function usage {
 cat << EOF
 
-Usage: $0 [-d OUTDIR ] [-f OUTFILE ] [ -o OUTROOT ] [-p OUTFILE_PREFIX ]
+Usage: sudo $0 [-d OUTDIR ] [-f OUTFILE ] [ -o OUTROOT ] [-p OUTFILE_PREFIX ]
 
-OUTROOT - Root directory/filesystem for output to be staged (Ex. /tmp)
-OUTDIR - Directory where output will be staged while running CatScale (Ex. catscale)
-OUTFILE_PREFIX - Prefix to use for tarfile (Ex. cs_)
-OUTFILE - Name of resultant tarfile created by catscale (.gz will be appended by the script) (Ex. mytarfile)
-
+ -d	OUTDIR, Optional, Directory where output will be staged while running CatScale. Overwrites default, which is "catscale_out" 
+ -f	OUTFILE, Optional, Name of resultant archive file created by CatScale (.tar.gz will be appended by the script). Overwrites default, which is "catscale_$(hostname -s)-$date +"%Y%m%d-%H%M")"
+ -o	OUTROOT, Optional, Root directory/filesystem for output to be saved. Overwrites default, which is "$(pwd)" 
+ -p	OUTFILE_PREFIX, Optional, Prefix to use for archive file. Overwrites default, which is "catscale_"
 
 EOF
 }
