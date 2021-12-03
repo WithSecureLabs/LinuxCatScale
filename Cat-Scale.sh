@@ -700,7 +700,7 @@ get_suspicios_data(){ #Production
 }
 
 #
-# Find all files with .jsp, .asp, .aspx, .php extentions. Hash them and capture last 100 lines. For Solaris it simply gzips these files. 
+# Find all files with .jsp, .asp, .aspx, .php extentions. Hash them and capture last 1000 lines. For Solaris it simply gzips these files. 
 # 
 get_pot_webshell(){ #Production
     
