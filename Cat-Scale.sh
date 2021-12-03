@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # Cat-Scale Linux Collection Script
-# Version: 1.3
-# Release Date: 2021-10-11
+# Version: 1.3.1
+# Release Date: 2021-11-30
 #
 # Latest public release available at https://github.com/FSecureLABS/LinuxCatScale
 #
@@ -600,6 +600,26 @@ get_packageinfo_Solaris(){ #Production
 }
 
 #
+# Verify installed pacakge information
+#
+vrfy_packageinfo_GNU(){ #Production
+
+	echo "      Verifying installed package info..."
+	if which dpkg &>/dev/null; then
+		dpkg -V > $OUTROOT/$OUTDIR/System_Info/$OUTFILE-deb-package-verify.txt
+	else 
+		rpm -qVa > $OUTROOT/$OUTDIR/System_Info/$OUTFILE-rpm-package-verify.txt
+	fi
+	
+}
+vrfy_packageinfo_Solaris(){ #Production
+
+	echo "      Verifying installed package info..."
+	pkg verify -v > $OUTROOT/$OUTDIR/System_Info/$OUTFILE-solaris-package-verify.txt
+	
+}
+
+#
 # Persistence Checks functions
 #
 get_startup_files_GNU(){ #Production
@@ -754,6 +774,7 @@ case $oscheck in
 			get_systeminfo_GNU
 			echo " - Installed Packages..."
 			get_packageinfo_GNU
+			vrfy_packageinfo_GNU
 			echo " - Configuration Files..." 
 			get_config_GNU
 			echo " - File timeline..."
@@ -793,6 +814,7 @@ case $oscheck in
 			get_docker_info
 			echo " - Installed Packages..."
 			get_packageinfo_GNU
+			vrfy_packageinfo_GNU
 			echo " - Configuration Files..." 
 			get_config_GNU
 			echo " - File timeline..."
@@ -831,6 +853,7 @@ case $oscheck in
 			get_docker_info
 			echo " - Installed Packages..."
 			get_packageinfo_Solaris
+			vrfy_packageinfo_Solaris
 			echo " - Configuration Files..." 
 			get_config_Solaris
 			echo " - File timeline..."
