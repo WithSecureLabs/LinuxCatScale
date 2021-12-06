@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # Cat-Scale Linux Collection Script
-# Version: 1.3.1
-# Release Date: 2021-11-30
+# Version: 1.3.2
+# Release Date: 2021-12-06
 #
 # Latest public release available at https://github.com/FSecureLABS/LinuxCatScale
 #
