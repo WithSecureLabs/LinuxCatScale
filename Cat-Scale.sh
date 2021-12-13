@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # Cat-Scale Linux Collection Script
-# Version: 1.3.2
-# Release Date: 2021-12-06
+# Version: 1.3.1
+# Release Date: 2021-11-30
 #
 # Latest public release available at https://github.com/FSecureLABS/LinuxCatScale
 #
@@ -211,10 +211,10 @@ get_procinfo_GNU(){ #Production
 	echo "      Getting the process symbolic links..."
 	find /proc/[0-9]*/exe -print0 2>/dev/null | xargs -0 ls -lh 2>/dev/null > $OUTROOT/$OUTDIR/Process_and_Network/$OUTFILE-process-exe-links.txt
     
-    	echo "      Getting the process map_files hashes..."
+    echo "      Getting the process map_files hashes..."
 	find -L /proc/[0-9]*/map_files -type f -print0 2>/dev/null | xargs -0 sha1sum 2>/dev/null > $OUTROOT/$OUTDIR/Process_and_Network/$OUTFILE-process-map_files-link-hashes.txt
     
-    	echo "      Getting the process map_files links..."
+    echo "      Getting the process map_files links..."
 	find /proc/[0-9]*/map_files -print0 2>/dev/null | xargs -0 ls -lh 2>/dev/null > $OUTROOT/$OUTDIR/Process_and_Network/$OUTFILE-process-map_files-links.txt
     
 	echo "      Getting the process fd links..."
@@ -679,14 +679,9 @@ get_cron_Solaris(){ #Production
 #
 # Find all files with execution permissions. 
 #
-get_executables(){ #Production, Added -xdev while we sort out the issue with the hanging of the dead mounts
+get_executables(){ #Production
 
-	find / -xdev -type f -perm -o+rx -print0 | xargs -0 sha1sum > $OUTROOT/$OUTDIR/Misc/$OUTFILE-exec-perm-files.txt
-	
-	#Checking for executables in know places of hiding. 
-	find /dev -type f -perm -o+rx -print0 | xargs -0 sha1sum >> $OUTROOT/$OUTDIR/Misc/$OUTFILE-exec-perm-files.txt
-	find /proc -type f -perm -o+rx -print0 | xargs -0 sha1sum >> $OUTROOT/$OUTDIR/Misc/$OUTFILE-exec-perm-files.txt
-	find /run -type f -perm -o+rx -print0 | xargs -0 sha1sum >> $OUTROOT/$OUTDIR/Misc/$OUTFILE-exec-perm-files.txt
+    find / -type f -perm -o+rx -print0 | xargs -0 sha1sum > $OUTROOT/$OUTDIR/Misc/$OUTFILE-exec-perm-files.txt
 
 }
 
