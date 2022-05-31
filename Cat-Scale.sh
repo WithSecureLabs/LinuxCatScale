@@ -711,7 +711,14 @@ get_pot_webshell(){ #Production
     find / -xdev -type f \( -iname '*.jsp' -o -iname '*.asp' -o -iname '*.php' -o -iname '*.aspx' \) 2>/dev/null -print0 | xargs -0 head -1000 > $OUTROOT/$OUTDIR/Misc/$OUTFILE-pot-webshell-first-1000.txt
     
 }
-	
+
+#
+# List all /tmp files for low hanging fruits
+#
+get_tmp_file_list() {
+	ls -lR /tmp 2>/dev/null > $OUTROOT/$OUTDIR/Misc/$OUTFILE-tmp-file-list.txt
+}
+
 # 
 # Artefact packaging and clean up
 # 
@@ -781,6 +788,8 @@ case $oscheck in
 			get_config_GNU
 			echo " - File timeline..."
 			get_find_timeline
+			echo " - /tmp file listing..."
+			get_tmp_file_list
 			echo " - .ssh folder..."
 			get_sshkeynhosts
 			echo " - Boot/Login Scripts..."
@@ -821,6 +830,8 @@ case $oscheck in
 			get_config_GNU
 			echo " - File timeline..."
 			get_find_timeline
+			echo " - /tmp file listing..."
+			get_tmp_file_list
 			echo " - .ssh folder..."
 			get_sshkeynhosts
 			echo " - Boot/Login Scripts..."
@@ -860,6 +871,8 @@ case $oscheck in
 			get_config_Solaris
 			echo " - File timeline..."
 			get_find_timeline
+			echo " - /tmp file listing..."
+			get_tmp_file_list
 			echo " - .ssh folder..."
 			get_sshkeynhosts
 			echo " - Boot/Login Scripts..."
@@ -897,6 +910,8 @@ case $oscheck in
 			get_config_GNU
 			echo " - File timeline..."
 			get_find_timeline
+			echo " - /tmp file listing..."
+			get_tmp_file_list
 			echo " - .ssh folder..."
 			get_sshkeynhosts
 			echo " - Boot/Login Scripts..."
