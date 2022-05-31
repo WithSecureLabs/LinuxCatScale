@@ -587,6 +587,8 @@ get_packageinfo_GNU(){ #Production
 	echo "      Collecting installed package info..."
 	if which dpkg &>/dev/null; then
 		dpkg --list > $OUTROOT/$OUTDIR/System_Info/$OUTFILE-deb-packages.txt
+	elif which zypper &>/dev/null; then
+		zypper search -si > $OUTROOT/$OUTDIR/System_Info/$OUTFILE-zypper-packages.txt
 	else 
 		rpm -qa > $OUTROOT/$OUTDIR/System_Info/$OUTFILE-rpm-packages.txt
 	fi
