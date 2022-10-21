@@ -684,7 +684,7 @@ get_cron_Solaris(){ #Production
 #
 get_executables(){ #Production
 
-    find / -type f -perm -o+rx -print0 | xargs -0 sha1sum > $OUTROOT/$OUTDIR/Misc/$OUTFILE-exec-perm-files.txt
+    find / -xdev -type f -perm -o+rx -print0 | xargs -0 sha1sum > $OUTROOT/$OUTDIR/Misc/$OUTFILE-exec-perm-files.txt
 
 }
 
