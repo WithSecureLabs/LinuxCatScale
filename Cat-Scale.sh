@@ -155,6 +155,7 @@ starttheshow(){ #Production
 	echo Date : $(date) >> $OUTROOT/$OUTDIR/$OUTFILE-console-error-log.txt
 	echo "================================ Console Errors ================================" >> $OUTROOT/$OUTDIR/$OUTFILE-console-error-log.txt
 	echo Date : $(date) > $OUTROOT/$OUTDIR/System_Info/$OUTFILE-host-date-timezone.txt
+	echo Date : $(TZ=UTC date +'%c %:z') >> $OUTROOT/$OUTDIR/System_Info/$OUTFILE-host-date-timezone.txt
  }
  
 #
