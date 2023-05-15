@@ -775,6 +775,8 @@ case $oscheck in
 			get_logs_GNU
 			echo " - System info..."
 			get_systeminfo_GNU
+			echo " - Docker and Virtual Machine info..."
+			get_docker_info
 			echo " - Installed Packages..."
 			get_packageinfo_GNU
 			vrfy_packageinfo_GNU
