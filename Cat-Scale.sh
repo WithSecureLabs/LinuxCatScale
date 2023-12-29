@@ -290,8 +290,8 @@ get_netinfo_GNU(){ #Production
 	
 	#Get routing table
 	echo "      Collecting Routing Table..."
-	if ip route &>/dev/null; then
-		ip route > $OUTROOT/$OUTDIR/Process_and_Network/$OUTFILE-routetable.txt
+	if ip --details route show table all &>/dev/null; then
+		ip --details route show table all > $OUTROOT/$OUTDIR/Process_and_Network/$OUTFILE-routetable.txt
 	else
 		netstat -rn > $OUTROOT/$OUTDIR/Process_and_Network/$OUTFILE-routetable.txt
 	fi
