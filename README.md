@@ -36,7 +36,7 @@ This project has predefined grok filters to ingest data into elastic, feel free 
 
 ## What does it collect?
 
-This script will produce output and archive. Currently most up to date what it collects is covered in the blog post here: https://labs.f-secure.com/tools/cat-scale-linux-incident-response-collection/
+This script will produce output and archive. Currently most up to date what it collects is covered in the blog post here: https://labs.withsecure.com/tools/cat-scale-linux-incident-response-collection
 
 ## Disclaimer
 
